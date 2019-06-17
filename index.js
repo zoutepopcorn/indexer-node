@@ -1,9 +1,28 @@
-var glob = require("glob")
+#!/usr/bin/env node
+const fs = require('fs');
+const glob = require("glob")
 
-// options is optional
-glob("**/*.js", options, function (er, files) {
-    // files is an array of filenames.
-    // If the `nonull` option is set, and nothing
-    // was found, then files is ["**/*.js"]
-    // er is an error object or null.
+glob("**/*(js|css)/*", {}, function (er, files) {
+    console.log(files)
+    console.log('----')
+    const css = []
+    const js = []
+    for(const file of files) {
+        // console.log(file)
+        if(file.endsWith('js')) {
+            js.push(file)
+        } else if(file.endsWith('css')) {
+            css.push(file)
+        }
+    }
+    console.log(js)
+    console.log(css)
+    const jsContent =
+`const jsFiles = ${JSON.stringify(js)};
+const cssFiles = ${JSON.stringify(css)};`;
+
+    fs.writeFile('fileList.js', jsContent, function (err) {
+        if (err) throw err;
+        console.log('Saved!');
+    });
 })
